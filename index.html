@@ -7,12 +7,11 @@
   <meta name="description" content="Application d'urgence pour enfants - Ben Manager Labs">
   <meta name="theme-color" content="#dc2626">
   
-  <!-- ✅ LIENS ABSOLUS AVEC ANTI-CACHE (Le ?v=2 force le téléphone à télécharger le nouveau logo) -->
-  <link rel="manifest" href="https://benmanager.kneo.me/files/Ben_Manager_Labs/assets/SOS-Kid-Manager/manifest.json?v=2">
-  <link rel="apple-touch-icon" href="https://benmanager.kneo.me/files/Ben_Manager_Labs/assets/SOS-Kid-Manager/icon-192x192.png?v=2">
-  <link rel="icon" type="image/png" sizes="192x192" href="https://benmanager.kneo.me/files/Ben_Manager_Labs/assets/SOS-Kid-Manager/icon-192x192.png?v=2">
-  <link rel="shortcut icon" href="https://benmanager.kneo.me/files/Ben_Manager_Labs/assets/SOS-Kid-Manager/icon-192x192.png?v=2">
-  <meta name="msapplication-TileImage" content="https://benmanager.kneo.me/files/Ben_Manager_Labs/assets/SOS-Kid-Manager/icon-192x192.png?v=2">
+  <!-- ✅ CHEMINS RELATIFS (Obligatoire pour GitHub Pages) -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
+  <link rel="shortcut icon" href="icon-192x192.png">
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -350,18 +349,18 @@
 </head>
 <body>
   <div class="header">
-    <h1>🚨 SOS Kid Manager Pro</h1>
+    <h1> SOS Kid Manager Pro</h1>
     <p>Application d'urgence pour enfants - Ben Manager Labs</p>
   </div>
 
   <div class="mode-toggle">
-    <button class="mode-btn active" onclick="setMode('enfant')">👶 Mode Enfant</button>
-    <button class="mode-btn" onclick="setMode('parent')">👨👩‍👧 Mode Parent</button>
+    <button class="mode-btn active" onclick="setMode('enfant')"> Mode Enfant</button>
+    <button class="mode-btn" onclick="setMode('parent')">👨‍👩‍👧 Mode Parent</button>
   </div>
 
   <div class="tabs">
     <button class="tab active" onclick="showTab('sos')">🚨 SOS</button>
-    <button class="tab" onclick="showTab('contacts')">📞 Contacts</button>
+    <button class="tab" onclick="showTab('contacts')"> Contacts</button>
     <button class="tab" onclick="showTab('history')">📋 Historique</button>
     <button class="tab" onclick="showTab('settings')">⚙️ Réglages</button>
   </div>
@@ -414,7 +413,7 @@
   <!-- ONGLET HISTORIQUE -->
   <div class="content" id="tab-history">
     <div class="card">
-      <h3> Historique des alertes</h3>
+      <h3>📋 Historique des alertes</h3>
       <div id="historyList"></div>
     </div>
   </div>
@@ -422,7 +421,7 @@
   <!-- ONGLET RÉGLAGES -->
   <div class="content" id="tab-settings">
     <div class="card">
-      <h3>🔐 Sécurité</h3>
+      <h3> Sécurité</h3>
       <div class="setting-item">
         <div>
           <div class="setting-label">Code PIN</div>
@@ -457,7 +456,7 @@
     </div>
     
     <div class="card">
-      <h3>️ À propos</h3>
+      <h3>ℹ️ À propos</h3>
       <p style="color: #64748b; line-height: 1.6;">
         <strong>SOS Kid Manager Pro v1.0</strong><br>
         Application d'urgence pour enfants en danger.<br>
@@ -470,7 +469,7 @@
   <!-- MODAL PIN -->
   <div class="pin-modal" id="pinModal">
     <div class="pin-box">
-      <h3> Code PIN requis</h3>
+      <h3>🔐 Code PIN requis</h3>
       <p style="color: #64748b; margin-top: 10px;">Entrez votre code à 4 chiffres</p>
       <input type="password" class="pin-input" id="pinInput" maxlength="4" placeholder="••••" inputmode="numeric">
       <div style="display: flex; gap: 10px; margin-top: 15px;">
@@ -481,13 +480,14 @@
   </div>
 
   <script>
-  // === ASTUCE DE SECOURS POUR LAURENT ===
-if (window.location.search.includes('reset=1')) {
-    localStorage.clear();
-    alert("✅ MÉMOIRE DU TÉLÉPHONE EFFACÉE ! Le PIN est redevenu 1234.");
-    window.location.href = window.location.pathname; // Recharge la page proprement
-}
-// ======================================
+    // === 🚨 ASTUCE DE SECOURS POUR LAURENT (À mettre tout en haut) ===
+    if (window.location.search.includes('reset=1')) {
+        localStorage.clear();
+        alert("✅ MÉMOIRE DU TÉLÉPHONE EFFACÉE ! Le PIN est redevenu 1234.");
+        window.location.href = window.location.pathname; 
+    }
+    // ================================================================
+
     // ====== CONFIGURATION ======
     let contacts = JSON.parse(localStorage.getItem('sos_contacts')) || [];
     let history = JSON.parse(localStorage.getItem('sos_history')) || [];
@@ -499,7 +499,7 @@ if (window.location.search.includes('reset=1')) {
     let countdownTimer;
     let countdownValue;
 
-    // ✅ FONCTION DE SECOURS DIRECTE (Accessible sans PIN)
+    // ====== FONCTION DE SECOURS DIRECTE ======
     window.resetAppData = function() {
         if(confirm("⚠️ Cela va effacer vos contacts, l'historique et remettre le PIN à 1234.\n\nContinuer ?")) {
             localStorage.removeItem('sos_contacts');
@@ -773,9 +773,9 @@ if (window.location.search.includes('reset=1')) {
             <div class="contact-type">${c.type === 'appel' ? '📞 Appel' : c.type === 'sms' ? '💬 SMS' : '📞+💬 Les 2'}</div>
           </div>
           <div class="contact-actions">
-            <a href="tel:${c.phone}" class="btn-sm btn-call"></a>
+            <a href="tel:${c.phone}" class="btn-sm btn-call">📞</a>
             ${c.type !== 'appel' ? `<a href="sms:${c.phone}" class="btn-sm btn-sms">💬</a>` : ''}
-            <button class="btn-sm btn-delete" onclick="deleteContact(${i})">️</button>
+            <button class="btn-sm btn-delete" onclick="deleteContact(${i})">🗑️</button>
           </div>
         </div>
       `).join('');
@@ -817,7 +817,7 @@ if (window.location.search.includes('reset=1')) {
     function renderHistory() {
       const container = document.getElementById('historyList');
       if (history.length === 0) {
-        container.innerHTML = '<div class="empty-state">📋 Aucune alerte enregistrée<br><small>Les alertes apparaîtront ici</small></div>';
+        container.innerHTML = '<div class="empty-state"> Aucune alerte enregistrée<br><small>Les alertes apparaîtront ici</small></div>';
         return;
       }
       
@@ -825,14 +825,14 @@ if (window.location.search.includes('reset=1')) {
         const date = new Date(h.date);
         const dateStr = date.toLocaleDateString('fr-FR');
         const timeStr = date.toLocaleTimeString('fr-FR');
-        const typeStr = h.type === 'appel' ? '📞' : h.type === 'sms' ? '💬' : '📞+💬';
+        const typeStr = h.type === 'appel' ? '📞' : h.type === 'sms' ? '💬' : '+💬';
         
         return `
           <div class="history-item">
             <div class="history-date">${dateStr} à ${timeStr}</div>
             <div class="history-details">
               <span class="history-contact">${typeStr} ${h.contact}</span><br>
-              📍 <a href="${h.position}" target="_blank" style="color: #dc2626;">Voir sur la carte</a>
+               <a href="${h.position}" target="_blank" style="color: #dc2626;">Voir sur la carte</a>
             </div>
           </div>
         `;

@@ -1,24 +1,20 @@
 {
   "name": "SOS Kid Manager Pro",
   "short_name": "SOS Kids",
-  "description": "Application d'urgence pour enfants - Ben Manager Labs",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#dc2626",
   "theme_color": "#dc2626",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
       "src": "icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }

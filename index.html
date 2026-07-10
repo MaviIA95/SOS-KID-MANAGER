@@ -479,19 +479,27 @@
     </div>
   </div>
 
-  <script>
-    // === 🚨 ASTUCE DE SECOURS POUR LAURENT (À mettre tout en haut) ===
+    <script>
+    // ===  CORRECTION PIN ET CACHE ===
+    // 1. On supprime automatiquement l'ancien code 1234 s'il est encore en mémoire
+    if (localStorage.getItem('sos_pin') === '1234') {
+        localStorage.removeItem('sos_pin');
+    }
+    // 2. On force le reset si on ajoute ?reset=1 à l'URL
     if (window.location.search.includes('reset=1')) {
         localStorage.clear();
-        alert("✅ MÉMOIRE DU TÉLÉPHONE EFFACÉE ! Le PIN est redevenu 1234.");
+        alert("✅ MÉMOIRE EFFACÉE ! Le nouveau PIN est 2026.");
         window.location.href = window.location.pathname; 
     }
-    // ================================================================
+    // ================================
 
     // ====== CONFIGURATION ======
     let contacts = JSON.parse(localStorage.getItem('sos_contacts')) || [];
     let history = JSON.parse(localStorage.getItem('sos_history')) || [];
-    let pin = localStorage.getItem('sos_pin') || '1234';
+    
+    // ✅ NOUVEAU CODE PAR DÉFAUT : 2026
+    let pin = localStorage.getItem('sos_pin') || '2026'; 
+    
     let silentMode = localStorage.getItem('sos_silent') === 'true';
     let pressDuration = parseInt(localStorage.getItem('sos_duration')) || 3;
     let currentMode = 'enfant';
@@ -501,13 +509,13 @@
 
     // ====== FONCTION DE SECOURS DIRECTE ======
     window.resetAppData = function() {
-        if(confirm("⚠️ Cela va effacer vos contacts, l'historique et remettre le PIN à 1234.\n\nContinuer ?")) {
+        if(confirm("⚠️ Cela va effacer vos contacts, l'historique et remettre le PIN à 2026.\n\nContinuer ?")) {
             localStorage.removeItem('sos_contacts');
             localStorage.removeItem('sos_history');
             localStorage.removeItem('sos_pin');
             localStorage.removeItem('sos_silent');
             localStorage.removeItem('sos_duration');
-            alert("✅ Application réinitialisée ! Le PIN est de nouveau 1234. La page va se recharger.");
+            alert("✅ Application réinitialisée ! Le PIN est de nouveau 2026. La page va se recharger.");
             location.reload();
         }
     }
@@ -602,7 +610,8 @@
 
     function verifyPin() {
       const input = document.getElementById('pinInput').value;
-      if (input === pin || input === '1234') {
+      // ✅ On accepte le PIN sauvegardé OU le 2026 par défaut
+      if (input === pin || input === '2026') {
         closePinModal();
         if (pinCallback) pinCallback();
       } else {
@@ -775,7 +784,7 @@
           <div class="contact-actions">
             <a href="tel:${c.phone}" class="btn-sm btn-call">📞</a>
             ${c.type !== 'appel' ? `<a href="sms:${c.phone}" class="btn-sm btn-sms">💬</a>` : ''}
-            <button class="btn-sm btn-delete" onclick="deleteContact(${i})">🗑️</button>
+            <button class="btn-sm btn-delete" onclick="deleteContact(${i})">️</button>
           </div>
         </div>
       `).join('');
@@ -817,7 +826,7 @@
     function renderHistory() {
       const container = document.getElementById('historyList');
       if (history.length === 0) {
-        container.innerHTML = '<div class="empty-state"> Aucune alerte enregistrée<br><small>Les alertes apparaîtront ici</small></div>';
+        container.innerHTML = '<div class="empty-state">📋 Aucune alerte enregistrée<br><small>Les alertes apparaîtront ici</small></div>';
         return;
       }
       
@@ -825,14 +834,14 @@
         const date = new Date(h.date);
         const dateStr = date.toLocaleDateString('fr-FR');
         const timeStr = date.toLocaleTimeString('fr-FR');
-        const typeStr = h.type === 'appel' ? '📞' : h.type === 'sms' ? '💬' : '+💬';
+        const typeStr = h.type === 'appel' ? '📞' : h.type === 'sms' ? '💬' : '📞+';
         
         return `
           <div class="history-item">
             <div class="history-date">${dateStr} à ${timeStr}</div>
             <div class="history-details">
               <span class="history-contact">${typeStr} ${h.contact}</span><br>
-               <a href="${h.position}" target="_blank" style="color: #dc2626;">Voir sur la carte</a>
+              📍 <a href="${h.position}" target="_blank" style="color: #dc2626;">Voir sur la carte</a>
             </div>
           </div>
         `;
@@ -847,7 +856,7 @@
     function toggleSilentMode() {
       silentMode = document.getElementById('silentMode').checked;
       localStorage.setItem('sos_silent', silentMode);
-      showStatus(silentMode ? '🔕 Mode discret activé' : '🔔 Mode discret désactivé', 'info');
+      showStatus(silentMode ? ' Mode discret activé' : ' Mode discret désactivé', 'info');
     }
 
     function changeDuration() {

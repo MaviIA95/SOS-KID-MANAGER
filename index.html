@@ -4,19 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>SOS Kid Manager Pro</title>
-  <meta name="description" content="Application d'urgence pour enfants - Ben Manager Labs">
   <meta name="theme-color" content="#dc2626">
-  
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="SOS Kid Manager">
   
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -25,7 +18,6 @@
       color: #333;
       max-width: 600px;
       margin: 0 auto;
-      overflow-x: hidden;
     }
     .header {
       background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
@@ -33,558 +25,292 @@
       padding: 20px;
       border-radius: 16px;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
       margin-bottom: 20px;
     }
-    .header h1 { font-size: 1.8rem; margin-bottom: 5px; font-weight: 800; }
-    .header p { opacity: 0.95; font-size: 0.9rem; }
-    
     .mode-toggle {
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
-      background: white;
-      padding: 5px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .mode-btn {
       flex: 1;
-      padding: 12px;
-      border: 2px solid #e2e8f0;
+      padding: 15px;
+      border: 2px solid #dc2626;
       background: white;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.3s;
-      color: #64748b;
+      font-weight: bold;
+      font-size: 1rem;
     }
     .mode-btn.active {
-      border-color: #dc2626;
-      background: #fef2f2;
-      color: #dc2626;
-      box-shadow: 0 2px 6px rgba(220, 38, 38, 0.2);
+      background: #dc2626;
+      color: white;
     }
-    
     .tabs {
       display: flex;
       gap: 5px;
       margin-bottom: 20px;
       background: white;
       padding: 5px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow-x: auto;
+      border-radius: 10px;
     }
     .tab {
       flex: 1;
-      min-width: 80px;
-      padding: 12px 8px;
+      padding: 12px;
       border: none;
       background: transparent;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.85rem;
-      transition: all 0.3s;
-      color: #64748b;
-      white-space: nowrap;
     }
     .tab.active {
       background: #dc2626;
       color: white;
-      box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
     }
-    
-    .content { display: none; animation: fadeIn 0.3s; }
+    .content { display: none; }
     .content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     
-    .sos-container {
-      background: white;
-      padding: 30px 20px;
-      border-radius: 16px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
     .sos-button {
-      width: 220px;
-      height: 220px;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
       background: radial-gradient(circle, #dc2626 0%, #991b1b 100%);
       color: white;
-      border: 10px solid #fca5a5;
+      border: 8px solid #fca5a5;
       font-size: 2rem;
       font-weight: bold;
       cursor: pointer;
-      margin: 20px auto;
-      box-shadow: 0 8px 25px rgba(220, 38, 38, 0.5);
-      transition: all 0.2s;
+      margin: 30px auto;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      position: relative;
-      overflow: hidden;
     }
-    .sos-button::before {
-      content: '';
-      position: absolute;
-      top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-      opacity: 0.5;
-    }
-    .sos-button:hover { transform: scale(1.05); }
-    .sos-button:active { transform: scale(0.95); }
     .sos-button.counting {
-      animation: pulse 1s infinite, glow 1s infinite;
+      animation: pulse 1s infinite;
       background: radial-gradient(circle, #fbbf24 0%, #f59e0b 100%);
-      border-color: #fde68a;
     }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-    @keyframes glow { 0%, 100% { box-shadow: 0 8px 25px rgba(220, 38, 38, 0.5); } 50% { box-shadow: 0 12px 35px rgba(251, 191, 36, 0.7); } }
-    .sos-icon { font-size: 4rem; margin-bottom: 10px; z-index: 1; }
-    .sos-text { font-size: 1.5rem; z-index: 1; }
-    .countdown { font-size: 4rem; font-weight: bold; color: #dc2626; margin: 20px 0; min-height: 80px; }
-    .cancel-btn {
-      background: #64748b; color: white; border: none; padding: 15px 40px; border-radius: 10px;
-      font-size: 1.1rem; cursor: pointer; margin-top: 15px; display: none; font-weight: 600;
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
     }
-    .cancel-btn.visible { display: inline-block; }
+    .countdown { font-size: 4rem; font-weight: bold; color: #dc2626; text-align: center; margin: 20px 0; }
     
-    .status { padding: 15px; margin: 15px 0; border-radius: 10px; font-weight: 600; text-align: center; display: none; }
-    .status.success { background: #d1fae5; color: #065f46; display: block; }
-    .status.error { background: #fee2e2; color: #991b1b; display: block; }
-    .status.info { background: #dbeafe; color: #1e40af; display: block; }
-    
-    .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .card h3 { color: #1e293b; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
+    .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; }
+    .card h3 { color: #1e293b; margin-bottom: 15px; }
     
     .contact-item {
-      display: flex; justify-content: space-between; align-items: center; padding: 15px;
-      background: #f8fafc; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #dc2626;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .contact-info { flex: 1; }
-    .contact-name { font-weight: 600; color: #1e293b; }
-    .contact-phone { color: #64748b; font-size: 0.9rem; margin-top: 3px; }
-    .contact-actions { display: flex; gap: 8px; }
-    .btn-sm { padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
-    .btn-edit { background: #dbeafe; color: #1e40af; }
+    .btn-sm { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; margin-left: 5px; }
     .btn-delete { background: #fee2e2; color: #991b1b; }
-    .btn-call { background: #d1fae5; color: #065f46; text-decoration: none; }
-    .btn-sms { background: #fef3c7; color: #92400e; text-decoration: none; }
     
-    .add-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-top: 15px; }
-    input, select { padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; }
-    input:focus, select:focus { outline: none; border-color: #dc2626; }
-    .btn-add { background: #dc2626; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .status { padding: 12px; margin: 15px 0; border-radius: 8px; text-align: center; display: none; }
+    .status.success { background: #d1fae5; color: #065f46; display: block; }
+    .status.error { background: #fee2e2; color: #991b1b; display: block; }
     
-    .history-item { padding: 15px; background: #f8fafc; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #dc2626; }
-    .history-date { font-weight: 600; color: #1e293b; }
-    .history-details { color: #64748b; font-size: 0.85rem; margin-top: 5px; }
-    
-    /* ✅ MODAL PIN - CORRIGÉ */
-    .pin-modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;
+    .reset-btn {
+      width: 100%;
+      padding: 15px;
+      background: #94a3b8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 30px;
+      cursor: pointer;
+      font-weight: bold;
     }
-    .pin-modal.active { display: flex; }
-    .pin-box {
-      background: white; padding: 30px; border-radius: 16px; text-align: center;
-      max-width: 320px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    }
-    .pin-input {
-      font-size: 2.5rem; text-align: center; letter-spacing: 15px; margin: 20px 0;
-      width: 100%; font-weight: bold; color: #dc2626; border: 2px solid #dc2626;
-    }
-    .pin-btns { display: flex; gap: 10px; margin-top: 15px; }
-    .pin-btns button { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
-    .btn-validate { background: #dc2626; color: white; }
-    .btn-cancel { background: #fee2e2; color: #991b1b; }
-
-    .setting-item { padding: 15px; background: #f8fafc; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-    .empty-state { text-align: center; padding: 40px 20px; color: #94a3b8; }
   </style>
 </head>
 <body>
   <div class="header">
     <h1>🚨 SOS Kid Manager Pro</h1>
-    <p>Application d'urgence pour enfants - Ben Manager Labs</p>
+    <p style="opacity: 0.9;">Application d'urgence pour enfants</p>
   </div>
 
   <div class="mode-toggle">
-    <button class="mode-btn active" id="btn-mode-enfant" onclick="switchToEnfant()">👶 Mode Enfant</button>
-    <button class="mode-btn" id="btn-mode-parent" onclick="requestPin(switchToParent)">👨‍👩‍👧 Mode Parent</button>
+    <button class="mode-btn active" onclick="switchMode('enfant')">👶 Mode Enfant</button>
+    <button class="mode-btn" onclick="checkPin('parent')">‍👩‍👧 Mode Parent</button>
   </div>
 
   <div class="tabs">
-    <button class="tab active" id="tab-btn-sos" onclick="showTab('sos')">🚨 SOS</button>
-    <button class="tab" id="tab-btn-contacts" onclick="requestPin(() => showTab('contacts'))">📞 Contacts</button>
-    <button class="tab" id="tab-btn-history" onclick="requestPin(() => showTab('history'))">📋 Historique</button>
-    <button class="tab" id="tab-btn-settings" onclick="requestPin(() => showTab('settings'))">⚙️ Réglages</button>
+    <button class="tab active" onclick="showTab('sos')">🚨 SOS</button>
+    <button class="tab" onclick="checkPin('contacts')">📞 Contacts</button>
+    <button class="tab" onclick="checkPin('history')">📋 Historique</button>
+    <button class="tab" onclick="checkPin('settings')">⚙️ Réglages</button>
   </div>
 
-  <!-- ONGLET SOS -->
-  <div class="content active" id="tab-sos">
-    <div class="sos-container">
+  <!-- SOS -->
+  <div class="content active" id="sos">
+    <div class="card" style="text-align: center;">
       <h2 style="color: #dc2626; margin-bottom: 10px;">Bouton d'Urgence</h2>
-      <p style="color: #64748b; margin-bottom: 20px;">Maintenez le bouton appuyé pendant 3 secondes</p>
+      <p style="color: #64748b; margin-bottom: 20px;">Maintenez 3 secondes</p>
       
-      <button class="sos-button" id="sosButton">
-        <div class="sos-icon">🚨</div>
-        <div class="sos-text">SOS</div>
+      <button class="sos-button" id="sosBtn" onmousedown="startSOS()" onmouseup="cancelSOS()" ontouchstart="startSOS()" ontouchend="cancelSOS()">
+        <div style="font-size: 4rem;">🚨</div>
+        <div>SOS</div>
       </button>
       
       <div class="countdown" id="countdown"></div>
-      <button class="cancel-btn" id="cancelBtn" onclick="cancelAlert()">❌ Annuler</button>
       <div class="status" id="status"></div>
-
-      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-        <button onclick="resetAppData()" style="background: #94a3b8; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; font-weight: 600; width: 100%;">
-          🔧 Oublié le PIN ? Réinitialiser l'application
-        </button>
-      </div>
+      
+      <button class="reset-btn" onclick="hardReset()">🔧 Réinitialiser l'application (PIN oublié)</button>
     </div>
   </div>
 
-  <!-- ONGLET CONTACTS -->
-  <div class="content" id="tab-contacts">
+  <!-- CONTACTS -->
+  <div class="content" id="contacts">
     <div class="card">
-      <h3>📞 Contacts d'urgence (Max 5)</h3>
+      <h3>📞 Contacts d'urgence</h3>
       <div id="contactsList"></div>
-      <div class="add-form" id="addContactForm" style="display: none;">
-        <input type="text" id="newName" placeholder="Nom (ex: Maman)">
-        <input type="tel" id="newPhone" placeholder="Téléphone">
-        <select id="newType">
-          <option value="appel">📞 Appel</option>
-          <option value="sms">💬 SMS</option>
-          <option value="les2">📞+💬 Les 2</option>
-        </select>
-        <button class="btn-add" onclick="addContact()">+ Ajouter</button>
+      <div style="margin-top: 15px;">
+        <input type="text" id="newName" placeholder="Nom" style="width: 48%; padding: 10px; margin-right: 2%;">
+        <input type="tel" id="newPhone" placeholder="Tél" style="width: 48%; padding: 10px;">
+        <button onclick="addContact()" style="width: 100%; margin-top: 10px; padding: 12px; background: #dc2626; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">+ Ajouter contact</button>
       </div>
-      <button class="btn-add" onclick="toggleAddForm()" style="width: 100%; margin-top: 10px;">➕ Ajouter un contact</button>
     </div>
   </div>
 
-  <!-- ONGLET HISTORIQUE -->
-  <div class="content" id="tab-history">
+  <!-- HISTORIQUE -->
+  <div class="content" id="history">
     <div class="card">
-      <h3>📋 Historique des alertes</h3>
+      <h3> Historique</h3>
       <div id="historyList"></div>
     </div>
   </div>
 
-  <!-- ONGLET RÉGLAGES -->
-  <div class="content" id="tab-settings">
+  <!-- RÉGLAGES -->
+  <div class="content" id="settings">
     <div class="card">
-      <h3>🔐 Sécurité</h3>
-      <div class="setting-item">
-        <div>
-          <div style="font-weight: 600;">Code PIN</div>
-          <div style="font-size: 0.85rem; color: #64748b;">Changez le code PIN (4 chiffres)</div>
-        </div>
-        <button class="btn-sm btn-edit" onclick="changePin()">Modifier</button>
-      </div>
-    </div>
-    <div class="card">
-      <h3>🔔 Options</h3>
-      <div class="setting-item">
-        <div>
-          <div style="font-weight: 600;">Mode discret</div>
-          <div style="font-size: 0.85rem; color: #64748b;">Vibration uniquement</div>
-        </div>
-        <input type="checkbox" id="silentMode" onchange="toggleSilentMode()" style="width: 20px; height: 20px;">
-      </div>
-      <div class="setting-item">
-        <div>
-          <div style="font-weight: 600;">Durée d'appui</div>
-          <div style="font-size: 0.85rem; color: #64748b;">Secondes avant déclenchement</div>
-        </div>
-        <select id="pressDuration" onchange="changeDuration()" style="width: 100px;">
-          <option value="2">2 sec</option>
-          <option value="3" selected>3 sec</option>
-          <option value="5">5 sec</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL PIN -->
-  <div class="pin-modal" id="pinModal">
-    <div class="pin-box">
-      <h3>🔐 Code PIN requis</h3>
-      <p style="color: #64748b; margin-top: 10px;">Entrez votre code à 4 chiffres</p>
-      <!-- ✅ CORRECTION : type="text" au lieu de type="number" -->
-      <input type="text" class="pin-input" id="pinInput" maxlength="4" placeholder="••••" inputmode="numeric" pattern="[0-9]*">
-      <div class="pin-btns">
-        <button class="btn-validate" onclick="verifyPin()">Valider</button>
-        <button class="btn-cancel" onclick="closePinModal()">Annuler</button>
-      </div>
+      <h3>🔐 Changer le PIN</h3>
+      <button onclick="changePin()" style="width: 100%; padding: 12px; background: #dc2626; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Modifier le code PIN</button>
     </div>
   </div>
 
   <script>
-    // === 1. GESTION DU CACHE ET DU PIN PAR DÉFAUT ===
-    if (localStorage.getItem('sos_pin') === '1234' || !localStorage.getItem('sos_pin')) {
-        localStorage.setItem('sos_pin', '2026');
-    }
-    
-    if (window.location.search.includes('reset=1')) {
-        localStorage.clear();
-        localStorage.setItem('sos_pin', '2026');
-        alert("✅ MÉMOIRE EFFACÉE ! Le PIN est 2026.");
-        window.location.href = window.location.pathname; 
-    }
-
-    // === 2. VARIABLES GLOBALES ===
+    // === PIN SIMPLE ET EFFICACE ===
     let currentPin = localStorage.getItem('sos_pin') || '2026';
     let contacts = JSON.parse(localStorage.getItem('sos_contacts')) || [];
     let historyData = JSON.parse(localStorage.getItem('sos_history')) || [];
-    let silentMode = localStorage.getItem('sos_silent') === 'true';
-    let pressDuration = parseInt(localStorage.getItem('sos_duration')) || 3;
-    let currentMode = 'enfant';
-    let pendingAction = null;
+    let countdownTimer;
 
-    // === 3. FONCTIONS PIN (INFAILLIBLES) ===
-    function requestPin(action) {
-      pendingAction = action;
-      document.getElementById('pinModal').classList.add('active');
-      const input = document.getElementById('pinInput');
-      input.value = '';
-      setTimeout(() => input.focus(), 100);
-    }
-
-    function closePinModal() {
-      document.getElementById('pinModal').classList.remove('active');
-      document.getElementById('pinInput').value = '';
-      pendingAction = null;
-    }
-
-    // ✅ CORRECTION CRITIQUE : comparaison en texte
-    function verifyPin() {
-      const input = document.getElementById('pinInput').value.toString().trim();
-      const expectedPin = currentPin.toString().trim();
+    // Fonction de vérification PIN - SIMPLE ET INFAILLIBLE
+    function checkPin(action) {
+      const input = prompt("🔐 Code PIN requis (défaut: 2026):");
       
-      console.log("PIN entré:", input, "| PIN attendu:", expectedPin);
+      if (input === null) {
+        return; // Annulé
+      }
       
-      if (input === expectedPin) {
-        console.log("✅ PIN correct!");
-        closePinModal();
-        if (pendingAction) {
-          const actionToExecute = pendingAction;
-          pendingAction = null;
-          actionToExecute();
+      if (input === currentPin) {
+        // PIN correct
+        if (action === 'parent') {
+          switchMode('parent');
+        } else if (action === 'contacts') {
+          showTab('contacts');
+          renderContacts();
+        } else if (action === 'history') {
+          showTab('history');
+          renderHistory();
+        } else if (action === 'settings') {
+          showTab('settings');
         }
       } else {
-        console.log("❌ PIN incorrect");
-        alert('❌ Code incorrect. Le code par défaut est 2026.');
-        document.getElementById('pinInput').value = '';
-        document.getElementById('pinInput').focus();
+        alert("❌ Code incorrect ! Le code par défaut est 2026");
       }
     }
 
-    function changePin() {
-      const newPin = prompt('Nouveau code PIN (4 chiffres):');
-      if (newPin && newPin.length === 4 && /^\d{4}$/.test(newPin)) {
-        currentPin = newPin;
-        localStorage.setItem('sos_pin', currentPin);
-        alert('✅ Code PIN modifié avec succès !');
-      } else if (newPin) {
-        alert('❌ Le PIN doit contenir exactement 4 chiffres.');
+    function switchMode(mode) {
+      const btns = document.querySelectorAll('.mode-btn');
+      if (mode === 'enfant') {
+        btns[0].classList.add('active');
+        btns[1].classList.remove('active');
+        document.querySelectorAll('.tab')[1].style.display = 'none';
+        document.querySelectorAll('.tab')[2].style.display = 'none';
+        document.querySelectorAll('.tab')[3].style.display = 'none';
+        showTab('sos');
+      } else {
+        btns[1].classList.add('active');
+        btns[0].classList.remove('active');
+        document.querySelectorAll('.tab')[1].style.display = 'block';
+        document.querySelectorAll('.tab')[2].style.display = 'block';
+        document.querySelectorAll('.tab')[3].style.display = 'block';
       }
-    }
-
-    // === 4. NAVIGATION ET MODES ===
-    function switchToEnfant() {
-      currentMode = 'enfant';
-      document.getElementById('btn-mode-enfant').classList.add('active');
-      document.getElementById('btn-mode-parent').classList.remove('active');
-      document.getElementById('tab-btn-contacts').style.display = 'none';
-      document.getElementById('tab-btn-history').style.display = 'none';
-      document.getElementById('tab-btn-settings').style.display = 'none';
-      showTab('sos');
-    }
-
-    function switchToParent() {
-      currentMode = 'parent';
-      document.getElementById('btn-mode-parent').classList.add('active');
-      document.getElementById('btn-mode-enfant').classList.remove('active');
-      document.getElementById('tab-btn-contacts').style.display = 'block';
-      document.getElementById('tab-btn-history').style.display = 'block';
-      document.getElementById('tab-btn-settings').style.display = 'block';
     }
 
     function showTab(tabName) {
       document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      
-      document.getElementById('tab-' + tabName).classList.add('active');
-      document.getElementById('tab-btn-' + tabName).classList.add('active');
-      
-      if (tabName === 'contacts') renderContacts();
-      if (tabName === 'history') renderHistory();
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
     }
 
-    // === 5. BOUTON SOS ===
-    let countdownTimer;
-    let countdownValue;
-
-    const sosButton = document.getElementById('sosButton');
-    const startPress = (e) => {
-      if (e.cancelable) e.preventDefault();
-      countdownValue = pressDuration;
-      sosButton.classList.add('counting');
-      document.getElementById('cancelBtn').classList.add('visible');
-      document.getElementById('countdown').textContent = countdownValue;
+    // SOS
+    function startSOS() {
+      const btn = document.getElementById('sosBtn');
+      const countdown = document.getElementById('countdown');
+      let count = 3;
+      
+      btn.classList.add('counting');
+      countdown.textContent = count;
       
       countdownTimer = setInterval(() => {
-        countdownValue--;
-        if (countdownValue > 0) {
-          document.getElementById('countdown').textContent = countdownValue;
+        count--;
+        if (count > 0) {
+          countdown.textContent = count;
         } else {
           clearInterval(countdownTimer);
-          triggerAlert();
+          sendAlert();
         }
       }, 1000);
-    };
-
-    const cancelPress = (e) => {
-      if (e && e.cancelable) e.preventDefault();
-      sosButton.classList.remove('counting');
-      document.getElementById('cancelBtn').classList.remove('visible');
-      clearInterval(countdownTimer);
-      document.getElementById('countdown').textContent = '';
-    };
-
-    sosButton.addEventListener('touchstart', startPress, { passive: false });
-    sosButton.addEventListener('touchend', cancelPress, { passive: false });
-    sosButton.addEventListener('mousedown', startPress);
-    sosButton.addEventListener('mouseup', cancelPress);
-    sosButton.addEventListener('mouseleave', cancelPress);
-
-    function cancelAlert() {
-      cancelPress();
-      showStatus('❌ Alerte annulée', 'info');
     }
 
-    async function triggerAlert() {
-      sosButton.classList.remove('counting');
-      document.getElementById('cancelBtn').classList.remove('visible');
-      document.getElementById('countdown').textContent = '';
+    function cancelSOS() {
+      const btn = document.getElementById('sosBtn');
+      const countdown = document.getElementById('countdown');
       
-      showStatus('📍 Récupération de la position...', 'info');
+      btn.classList.remove('counting');
+      countdown.textContent = '';
+      clearInterval(countdownTimer);
+    }
+
+    async function sendAlert() {
+      cancelSOS();
+      showStatus('📍 Localisation...', 'error');
       
       try {
-        const position = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000, enableHighAccuracy: true });
+        const pos = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {timeout: 10000});
         });
         
-        const mapsLink = `https://maps.google.com/?q=${position.coords.latitude},${position.coords.longitude}`;
-        const now = new Date();
+        const link = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+        const msg = ` SOS ENFANT\nPosition: ${link}`;
         
-        if (navigator.vibrate && !silentMode) navigator.vibrate([500, 200, 500]);
-        
-        let count = 0;
-        for (const contact of contacts) {
-          const msg = `🚨 ALERTE SOS ENFANT\nPosition : ${mapsLink}\nHeure : ${now.toLocaleTimeString('fr-FR')}`;
-          if (contact.type === 'appel' || contact.type === 'les2') {
-            window.location.href = `tel:${contact.phone}`;
-            count++;
-          }
-          if (contact.type === 'sms' || contact.type === 'les2') {
-            window.open(`sms:${contact.phone}?body=${encodeURIComponent(msg)}`, '_blank');
-            if (contact.type !== 'les2') count++;
-          }
-          historyData.unshift({ date: now.toISOString(), contact: contact.name, phone: contact.phone, type: contact.type, position: mapsLink });
+        if (contacts.length === 0) {
+          showStatus('️ Aucun contact configuré !', 'error');
+          return;
         }
         
-        localStorage.setItem('sos_history', JSON.stringify(historyData.slice(0, 50)));
-        showStatus(`✅ Alerte envoyée à ${count} contact(s)!`, 'success');
-      } catch (error) {
-        showStatus('❌ Erreur de géolocalisation', 'error');
-      }
-    }
-
-    // === 6. CONTACTS & HISTORIQUE ===
-    function toggleAddForm() {
-      const form = document.getElementById('addContactForm');
-      form.style.display = form.style.display === 'none' ? 'grid' : 'none';
-    }
-
-    function addContact() {
-      const name = document.getElementById('newName').value.trim();
-      const phone = document.getElementById('newPhone').value.trim();
-      const type = document.getElementById('newType').value;
-      if (!name || !phone) return alert('❌ Remplissez tous les champs');
-      
-      contacts.push({ name, phone, type });
-      localStorage.setItem('sos_contacts', JSON.stringify(contacts));
-      document.getElementById('newName').value = '';
-      document.getElementById('newPhone').value = '';
-      toggleAddForm();
-      renderContacts();
-    }
-
-    function deleteContact(index) {
-      if (confirm('Supprimer ce contact ?')) {
-        contacts.splice(index, 1);
-        localStorage.setItem('sos_contacts', JSON.stringify(contacts));
-        renderContacts();
-      }
-    }
-
-    function renderContacts() {
-      const container = document.getElementById('contactsList');
-      if (contacts.length === 0) {
-        container.innerHTML = '<div class="empty-state">Aucun contact. Ajoutez-en un ci-dessous.</div>';
-        return;
-      }
-      container.innerHTML = contacts.map((c, i) => `
-        <div class="contact-item">
-          <div class="contact-info">
-            <div class="contact-name">${c.name}</div>
-            <div class="contact-phone">${c.phone} (${c.type === 'appel' ? 'Appel' : c.type === 'sms' ? 'SMS' : 'Les 2'})</div>
-          </div>
-          <div class="contact-actions">
-            <a href="tel:${c.phone}" class="btn-sm btn-call">📞</a>
-            <button class="btn-sm btn-delete" onclick="deleteContact(${i})">🗑️</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderHistory() {
-      const container = document.getElementById('historyList');
-      if (historyData.length === 0) {
-        container.innerHTML = '<div class="empty-state">Aucune alerte enregistrée.</div>';
-        return;
-      }
-      container.innerHTML = historyData.map(h => `
-        <div class="history-item">
-          <div class="history-date">${new Date(h.date).toLocaleString('fr-FR')}</div>
-          <div class="history-details">📞 ${h.contact} - 📍 <a href="${h.position}" target="_blank" style="color:#dc2626;">Carte</a></div>
-        </div>
-      `).join('');
-    }
-
-    // === 7. RÉGLAGES & UTILITAIRES ===
-    function toggleSilentMode() {
-      silentMode = document.getElementById('silentMode').checked;
-      localStorage.setItem('sos_silent', silentMode);
-    }
-
-    function changeDuration() {
-      pressDuration = parseInt(document.getElementById('pressDuration').value);
-      localStorage.setItem('sos_duration', pressDuration);
-    }
-
-    function resetAppData() {
-      if(confirm("⚠️ Cela va tout effacer et remettre le PIN à 2026. Continuer ?")) {
-        localStorage.clear();
-        localStorage.setItem('sos_pin', '2026');
-        alert("✅ Réinitialisé ! Le PIN est 2026.");
-        location.reload();
+        for (let c of contacts) {
+          if (c.type === 'appel' || c.type === 'les2') {
+            window.location.href = `tel:${c.phone}`;
+          }
+          if (c.type === 'sms' || c.type === 'les2') {
+            window.open(`sms:${c.phone}?body=${encodeURIComponent(msg)}`, '_blank');
+          }
+        }
+        
+        historyData.unshift({date: new Date().toISOString(), pos: link});
+        localStorage.setItem('sos_history', JSON.stringify(historyData));
+        showStatus('✅ Alertes envoyées !', 'success');
+      } catch (e) {
+        showStatus('❌ Erreur GPS', 'error');
       }
     }
 
@@ -595,10 +321,82 @@
       setTimeout(() => s.style.display = 'none', 5000);
     }
 
-    // Initialisation
-    document.getElementById('silentMode').checked = silentMode;
-    document.getElementById('pressDuration').value = pressDuration;
-    switchToEnfant();
+    // Contacts
+    function addContact() {
+      const name = document.getElementById('newName').value;
+      const phone = document.getElementById('newPhone').value;
+      const type = prompt("Type d'alerte?\n1 = Appel\n2 = SMS\n3 = Les deux", "3");
+      
+      if (!name || !phone) return alert('Remplissez tout !');
+      
+      let typeStr = 'les2';
+      if (type === '1') typeStr = 'appel';
+      if (type === '2') typeStr = 'sms';
+      
+      contacts.push({name, phone, type: typeStr});
+      localStorage.setItem('sos_contacts', JSON.stringify(contacts));
+      document.getElementById('newName').value = '';
+      document.getElementById('newPhone').value = '';
+      renderContacts();
+    }
+
+    function renderContacts() {
+      const div = document.getElementById('contactsList');
+      if (contacts.length === 0) {
+        div.innerHTML = '<p style="text-align:center;color:#94a3b8;">Aucun contact</p>';
+        return;
+      }
+      div.innerHTML = contacts.map((c, i) => `
+        <div class="contact-item">
+          <div><strong>${c.name}</strong><br><small>${c.phone} (${c.type})</small></div>
+          <button class="btn-sm btn-delete" onclick="delContact(${i})">🗑️</button>
+        </div>
+      `).join('');
+    }
+
+    function delContact(i) {
+      if (confirm('Supprimer ?')) {
+        contacts.splice(i, 1);
+        localStorage.setItem('sos_contacts', JSON.stringify(contacts));
+        renderContacts();
+      }
+    }
+
+    function renderHistory() {
+      const div = document.getElementById('historyList');
+      if (historyData.length === 0) {
+        div.innerHTML = '<p style="text-align:center;color:#94a3b8;">Aucune alerte</p>';
+        return;
+      }
+      div.innerHTML = historyData.map(h => `
+        <div class="contact-item">
+          <div>${new Date(h.date).toLocaleString('fr-FR')}</div>
+          <a href="${h.pos}" target="_blank" style="color:#dc2626;">📍 Voir</a>
+        </div>
+      `).join('');
+    }
+
+    // Réinitialisation
+    function changePin() {
+      const newPin = prompt("Nouveau code PIN (4 chiffres):");
+      if (newPin && newPin.length === 4) {
+        currentPin = newPin;
+        localStorage.setItem('sos_pin', newPin);
+        alert("✅ PIN changé !");
+      }
+    }
+
+    function hardReset() {
+      if (confirm("⚠️ TOUT effacer et remettre PIN à 2026 ?")) {
+        localStorage.clear();
+        localStorage.setItem('sos_pin', '2026');
+        alert("✅ Réinitialisé !");
+        location.reload();
+      }
+    }
+
+    // Init
+    switchMode('enfant');
   </script>
 </body>
 </html>

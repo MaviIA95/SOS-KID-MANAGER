@@ -184,7 +184,7 @@
     .history-date { font-weight: 600; color: #1e293b; }
     .history-details { color: #64748b; font-size: 0.85rem; margin-top: 5px; }
     
-    /* ✅ MODAL PIN CORRIGÉ */
+    /* ✅ MODAL PIN - CORRIGÉ */
     .pin-modal {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;
@@ -209,19 +209,17 @@
 </head>
 <body>
   <div class="header">
-    <h1>SOS Kid Manager Pro</h1>
+    <h1>🚨 SOS Kid Manager Pro</h1>
     <p>Application d'urgence pour enfants - Ben Manager Labs</p>
   </div>
 
   <div class="mode-toggle">
-    <button class="mode-btn active" id="btn-mode-enfant" onclick="switchToEnfant()"> Mode Enfant</button>
-    <!-- ✅ Bouton Parent sécurisé par PIN -->
-    <button class="mode-btn" id="btn-mode-parent" onclick="requestPin(switchToParent)">👨‍👩‍ Mode Parent</button>
+    <button class="mode-btn active" id="btn-mode-enfant" onclick="switchToEnfant()">👶 Mode Enfant</button>
+    <button class="mode-btn" id="btn-mode-parent" onclick="requestPin(switchToParent)">👨‍👩‍👧 Mode Parent</button>
   </div>
 
   <div class="tabs">
     <button class="tab active" id="tab-btn-sos" onclick="showTab('sos')">🚨 SOS</button>
-    <!-- ✅ Onglets sécurisés par PIN -->
     <button class="tab" id="tab-btn-contacts" onclick="requestPin(() => showTab('contacts'))">📞 Contacts</button>
     <button class="tab" id="tab-btn-history" onclick="requestPin(() => showTab('history'))">📋 Historique</button>
     <button class="tab" id="tab-btn-settings" onclick="requestPin(() => showTab('settings'))">⚙️ Réglages</button>
@@ -253,7 +251,7 @@
   <!-- ONGLET CONTACTS -->
   <div class="content" id="tab-contacts">
     <div class="card">
-      <h3> Contacts d'urgence (Max 5)</h3>
+      <h3>📞 Contacts d'urgence (Max 5)</h3>
       <div id="contactsList"></div>
       <div class="add-form" id="addContactForm" style="display: none;">
         <input type="text" id="newName" placeholder="Nom (ex: Maman)">
@@ -272,7 +270,7 @@
   <!-- ONGLET HISTORIQUE -->
   <div class="content" id="tab-history">
     <div class="card">
-      <h3> Historique des alertes</h3>
+      <h3>📋 Historique des alertes</h3>
       <div id="historyList"></div>
     </div>
   </div>
@@ -315,9 +313,10 @@
   <!-- MODAL PIN -->
   <div class="pin-modal" id="pinModal">
     <div class="pin-box">
-      <h3> Code PIN requis</h3>
+      <h3>🔐 Code PIN requis</h3>
       <p style="color: #64748b; margin-top: 10px;">Entrez votre code à 4 chiffres</p>
-      <input type="number" class="pin-input" id="pinInput" maxlength="4" placeholder="••••" inputmode="numeric">
+      <!-- ✅ CORRECTION : type="text" au lieu de type="number" -->
+      <input type="text" class="pin-input" id="pinInput" maxlength="4" placeholder="••••" inputmode="numeric" pattern="[0-9]*">
       <div class="pin-btns">
         <button class="btn-validate" onclick="verifyPin()">Valider</button>
         <button class="btn-cancel" onclick="closePinModal()">Annuler</button>
@@ -327,12 +326,10 @@
 
   <script>
     // === 1. GESTION DU CACHE ET DU PIN PAR DÉFAUT ===
-    // Force le PIN à 2026 si l'ancien 1234 est encore présent
     if (localStorage.getItem('sos_pin') === '1234' || !localStorage.getItem('sos_pin')) {
         localStorage.setItem('sos_pin', '2026');
     }
     
-    // Lien magique pour reset total (?reset=1)
     if (window.location.search.includes('reset=1')) {
         localStorage.clear();
         localStorage.setItem('sos_pin', '2026');
@@ -347,7 +344,7 @@
     let silentMode = localStorage.getItem('sos_silent') === 'true';
     let pressDuration = parseInt(localStorage.getItem('sos_duration')) || 3;
     let currentMode = 'enfant';
-    let pendingAction = null; // Stocke l'action à faire après le PIN
+    let pendingAction = null;
 
     // === 3. FONCTIONS PIN (INFAILLIBLES) ===
     function requestPin(action) {
@@ -364,17 +361,26 @@
       pendingAction = null;
     }
 
+    // ✅ CORRECTION CRITIQUE : comparaison en texte
     function verifyPin() {
-      const input = document.getElementById('pinInput').value;
-      if (input === currentPin) {
+      const input = document.getElementById('pinInput').value.toString().trim();
+      const expectedPin = currentPin.toString().trim();
+      
+      console.log("PIN entré:", input, "| PIN attendu:", expectedPin);
+      
+      if (input === expectedPin) {
+        console.log("✅ PIN correct!");
         closePinModal();
         if (pendingAction) {
-          pendingAction();
+          const actionToExecute = pendingAction;
           pendingAction = null;
+          actionToExecute();
         }
       } else {
+        console.log("❌ PIN incorrect");
         alert('❌ Code incorrect. Le code par défaut est 2026.');
         document.getElementById('pinInput').value = '';
+        document.getElementById('pinInput').focus();
       }
     }
 
@@ -459,7 +465,7 @@
 
     function cancelAlert() {
       cancelPress();
-      showStatus(' Alerte annulée', 'info');
+      showStatus('❌ Alerte annulée', 'info');
     }
 
     async function triggerAlert() {
@@ -574,7 +580,7 @@
     }
 
     function resetAppData() {
-      if(confirm("️ Cela va tout effacer et remettre le PIN à 2026. Continuer ?")) {
+      if(confirm("⚠️ Cela va tout effacer et remettre le PIN à 2026. Continuer ?")) {
         localStorage.clear();
         localStorage.setItem('sos_pin', '2026');
         alert("✅ Réinitialisé ! Le PIN est 2026.");
@@ -592,7 +598,7 @@
     // Initialisation
     document.getElementById('silentMode').checked = silentMode;
     document.getElementById('pressDuration').value = pressDuration;
-    switchToEnfant(); // Démarre en mode enfant par défaut
+    switchToEnfant();
   </script>
 </body>
 </html>
